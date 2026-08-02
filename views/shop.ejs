@@ -1,5 +1,14 @@
 <%- include("./partials/header") %>
 
+<%- include("./partials/header") %>
+
+<% if (success && success.length > 0) { %>
+    <div class="mx-10 mt-6 bg-green-500 text-white px-4 py-3 rounded-md">
+        <%= success[0] %>
+    </div>
+<% } %>
+
+<div class="w-full min-h-screen flex px-10 py-10 gap-10">
 <div class="w-full min-h-screen flex px-10 py-10 gap-10">
 
     <!-- Sidebar -->
@@ -40,40 +49,75 @@
     <!-- Products -->
     <div class="flex-1">
 
+        <% if(products && products.length > 0){ %>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-            <% for(let i=0;i<8;i++){ %>
+            <% products.forEach(function(product){ %>
 
-            <div class="bg-white">
+            <div class="bg-white shadow rounded-lg overflow-hidden">
 
-                <div class="h-64 bg-yellow-400 flex items-center justify-center">
+                <div
+                    class="h-64 flex items-center justify-center "
+                    style="background-color:<%= product.bgcolor %>;"
+                >
                     <img
-                        src="https://placehold.co/200x220"
-                        alt="product"
+                        src="data:<%= product.image.contentType %>;base64,<%= product.image.data.toString('base64') %>"
+                        alt="<%= product.name %>"
                         class="h-48 object-contain"
-                    >
+                    />
                 </div>
 
-                <div class="bg-red-500 text-black p-5 flex justify-between items-center">
+                <div
+                    class="p-5 flex justify-between items-center"
+                    style="background-color:<%= product.panelcolor %>; color:<%= product.textcolor %>;"
+                >
 
                     <div>
-                        <h2 class="font-semibold text-lg">Clinge Bag</h2>
-                        <p class="text-lg font-medium">₹1200</p>
+                        <h2 class="font-semibold text-lg">
+                            <%= product.name %>
+                        </h2>
+
+                        <% if(product.discount && product.discount > 0){ %>
+
+                            <p class="font-semibold">
+                                ₹<%= product.discount %>
+                            </p>
+
+                            <p class="line-through text-sm opacity-60">
+                                ₹<%= product.price %>
+                            </p>
+
+                        <% } else { %>
+
+                            <p class="font-semibold">
+                                ₹<%= product.price %>
+                            </p>
+
+                        <% } %>
                     </div>
 
-                    <button
-                        class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-xl hover:bg-gray-100 transition"
+                    <a
+                        class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:bg-gray-200" href="/addtocart/<%=product._id%>"
                     >
                         <i class="ri-add-line"></i>
-                    </button>
+                     </a>
 
                 </div>
 
             </div>
 
-            <% } %>
+            <% }) %>
 
         </div>
+
+        <% } else { %>
+
+            <div class="text-center text-xl mt-20">
+                No Products Found
+            </div>
+
+        <% } %>
 
     </div>
 
